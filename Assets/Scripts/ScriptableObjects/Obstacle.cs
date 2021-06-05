@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName ="NewObstacle",menuName ="ScriptableObjects",order =0)]
+[CreateAssetMenu(fileName ="NewObstacle",menuName ="ScriptableObjects/Obstacle",order =0)]
 public class Obstacle : ScriptableObject
 {
-    public Sprite sprite;
-    public Color color = Color.white;
+    public Sprite obstacleSpriteTop;
+    public Sprite obstacleSpriteBot;
+    public Color obstacleColorTop = Color.white; 
+    public Color obstacleColorBot = Color.white;
     public int minScore = 0;
-
-
 
 }

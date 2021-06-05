@@ -8,14 +8,15 @@ public class ObstacleController : MonoBehaviour
     public Obstacle[] obstacles;
     public GameObject obstaclePrefab;
     [Range(0.1f,20f)]public float obstacleSpeed = 3.0f;
-    public float obstacleFrequency = 1.0f;
+    [Range(0.1f, 4f)] public float obstacleFrequency = 1.0f;
     [Space]
     [Range(5f, 40f)] public float obstacleSpawnX = 10f;
-    public float obstacleSpawnY = 3f;
+    [Range(1f, 3f)] public float obstacleSpawnYMax = 2f;
+    [Range(-1f, 1f)] public float obstacleSpawnYOffset = 0.2f;
+    [Range(0.5f, 5f)] public float obstacleOpeningSizeY = 1f;
 
-    private int avaliableObstacleTypes = 0;
-    private int maxObstacles = 15;
-
+    private int avaliableObstacleTypes = 1;
+    private int maxObstacles = 8;
 
     private GameObject[] obstacleInstances;
     private int lastRespawnedObstacle = 0;
@@ -25,24 +26,18 @@ public class ObstacleController : MonoBehaviour
         obstacles.OrderBy(x => x.minScore);
         obstacleInstances = new GameObject[15];
 
-        StartCoroutine("ReSpawnObstacles"); //this coroutine respawns last respawned obstacle as a new obstacle
+        StartCoroutine("ReSpawnObstacles"); //this coroutine continually respawns last respawned obstacle as a new obstacle
     
     }
     
 
     void SpawnObstacle(int obstacleNum)
     {
-        Vector2 spawnPos = new Vector2(0, 0);
-        bool isBottom = false;
+        Vector2 spawnPos;
+        bool isBottom;
         isBottom = (Random.Range(0, 2) == 1 ? true : false);
-        if (!isBottom)
-        {
-            spawnPos = new Vector2(obstacleSpawnX, obstacleSpawnY);
-        }
-        else
-        {
-            spawnPos = new Vector2(obstacleSpawnX, obstacleSpawnY * -1);
-        }
+        float offset = obstacleSpawnYMax;
+        spawnPos = new Vector2(obstacleSpawnX, (Random.Range(-obstacleSpawnYMax + offset, obstacleSpawnYMax + offset)));
         obstacleInstances[obstacleNum].transform.position = spawnPos;
     }
 
@@ -53,9 +48,13 @@ public class ObstacleController : MonoBehaviour
             if(!obstacleInstances[lastRespawnedObstacle])
             {
                 Vector2 speed = new Vector2(-obstacleSpeed, 0);
+                GameObject obs = Instantiate(obstaclePrefab, transform);
+                
+                obs.GetComponent<Rigidbody2D>().velocity = speed;
+                obs.transform.GetChild(0).position += Vector3.up * obstacleOpeningSizeY / 2;
+                obs.transform.GetChild(1).position -= Vector3.up * obstacleOpeningSizeY / 2;
 
-                obstacleInstances[lastRespawnedObstacle] = Instantiate(obstaclePrefab, transform);
-                obstacleInstances[lastRespawnedObstacle].GetComponent<Rigidbody2D>().velocity = speed;
+                obstacleInstances[lastRespawnedObstacle] = obs;
 
             }
             SpawnObstacle(lastRespawnedObstacle);
