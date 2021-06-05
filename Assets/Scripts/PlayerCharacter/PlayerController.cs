@@ -40,6 +40,22 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.transform.tag == "SkyCollider")
+        {
+            if (rb.velocity.y > 0)
+            {
+                rb.velocity = new Vector2(0, 0);
+            }
+        }
+        else
+        {
+            transform.position = new Vector2(-5, 0);
+
+        }
+    }
+
 
 
 

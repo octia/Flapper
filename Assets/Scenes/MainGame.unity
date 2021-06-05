@@ -403,7 +403,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -422,13 +422,13 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.35
+  m_LinearDrag: 0.87
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 5
 --- !u!114 &650569560
 MonoBehaviour:
@@ -541,7 +541,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -857,9 +857,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacles: []
-  obstaclePrefab: {fileID: 0}
-  obstacleSpeed: 1
+  obstaclePrefab: {fileID: 6299038726036277694, guid: 9710bffdb588ee9479aadb2ddd71403c, type: 3}
+  obstacleSpeed: 7.9
   obstacleFrequency: 1
+  obstacleSpawnX: 40
+  obstacleSpawnY: 5
 --- !u!1 &1742089707
 GameObject:
   m_ObjectHideFlags: 0
@@ -1004,7 +1006,7 @@ GameObject:
   - component: {fileID: 1839328805}
   m_Layer: 0
   m_Name: Sky
-  m_TagString: Untagged
+  m_TagString: SkyCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1017,7 +1019,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839328803}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.77, z: 10}
+  m_LocalPosition: {x: 0, y: 5.4, z: 10}
   m_LocalScale: {x: 22.42, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 1115113141}
@@ -1033,7 +1035,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
