@@ -15,7 +15,7 @@ public class ObstacleController : MonoBehaviour
     [Range(-1f, 1f)] public float obstacleSpawnYOffset = 0.2f;
     [Range(0.5f, 5f)] public float obstacleOpeningSizeY = 1f;
 
-    private int avaliableObstacleTypes = 1;
+    private int avaliableObstacleTypes = 0;
     private int maxObstacles = 8;
 
     private GameObject[] obstacleInstances;
@@ -24,21 +24,36 @@ public class ObstacleController : MonoBehaviour
     void Start()
     {
         obstacles.OrderBy(x => x.minScore);
+        foreach (Obstacle obs  in obstacles)
+        {
+            if (obs.minScore == 0 )
+            {
+                avaliableObstacleTypes++;
+            }
+        }
         obstacleInstances = new GameObject[15];
 
         StartCoroutine("ReSpawnObstacles"); //this coroutine continually respawns last respawned obstacle as a new obstacle
     
     }
-    
 
     void SpawnObstacle(int obstacleNum)
     {
         Vector2 spawnPos;
-        bool isBottom;
-        isBottom = (Random.Range(0, 2) == 1 ? true : false);
-        float offset = obstacleSpawnYMax;
+        float offset = obstacleSpawnYOffset;
+        
         spawnPos = new Vector2(obstacleSpawnX, (Random.Range(-obstacleSpawnYMax + offset, obstacleSpawnYMax + offset)));
         obstacleInstances[obstacleNum].transform.position = spawnPos;
+
+
+        GameObject obs = obstacleInstances[obstacleNum];
+        Obstacle obstacleToUse = obstacles[Random.Range(0, avaliableObstacleTypes)];
+
+        obs.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = obstacleToUse.obstacleSpriteTop;
+        obs.transform.GetChild(0).GetComponent<SpriteRenderer>().color = obstacleToUse.obstacleColorTop;
+        obs.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = obstacleToUse.obstacleSpriteBot;
+        obs.transform.GetChild(1).GetComponent<SpriteRenderer>().color = obstacleToUse.obstacleColorBot;
+
     }
 
     IEnumerator ReSpawnObstacles()
@@ -72,8 +87,4 @@ public class ObstacleController : MonoBehaviour
     }
 
 
-    void FixedUpdate()
-    {
-        
-    }
 }

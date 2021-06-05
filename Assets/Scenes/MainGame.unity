@@ -577,6 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac19d3bc59869048a630c06f2db98f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 2136482028}
   gravityRate: 2.03
   jumpPower: 1.04
   maxSpeed: 1
@@ -596,7 +597,7 @@ GameObject:
   - component: {fileID: 749999419}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Death
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -640,7 +641,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -993,13 +994,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacles:
   - {fileID: 11400000, guid: 00de918cd52200249b6f74aa171409d2, type: 2}
+  - {fileID: 11400000, guid: 03f374de2c2dc3642ab9099b945f83f3, type: 2}
   obstaclePrefab: {fileID: 6299038726036277694, guid: 9710bffdb588ee9479aadb2ddd71403c, type: 3}
   obstacleSpeed: 5.8
   obstacleFrequency: 1.68
-  obstacleSpawnX: 40
+  obstacleSpawnX: 32.7
   obstacleSpawnYMax: 2
-  obstacleSpawnYOffset: 0.2
-  obstacleOpeningSizeY: 2.5
+  obstacleSpawnYOffset: 0.3
+  obstacleOpeningSizeY: 2.78
 --- !u!1 &1742089707
 GameObject:
   m_ObjectHideFlags: 0
@@ -1144,7 +1146,7 @@ GameObject:
   - component: {fileID: 1839328805}
   m_Layer: 0
   m_Name: Sky
-  m_TagString: SkyCollider
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1157,8 +1159,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839328803}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.4, z: 10}
-  m_LocalScale: {x: 22.42, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: 5, z: 10}
+  m_LocalScale: {x: 22.42, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1115113141}
   m_RootOrder: 0
@@ -1284,11 +1286,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b73f2aedc4d215a469e16233c79bbeb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreCounter: {fileID: 0}
-  bombCounter: {fileID: 0}
-  scoreAmount: 0
-  bombAmount: 0
-  maxBombCount: 3
+  scoreGO: {fileID: 849469635}
+  bombGO: {fileID: 412026297}
+  scoreCount: 0
+  bombCount: 0
+  bombAwardFrequency: 10
+  bombCountMax: 3
 --- !u!4 &2136482030
 Transform:
   m_ObjectHideFlags: 0
