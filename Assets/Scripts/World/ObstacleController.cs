@@ -5,26 +5,88 @@ using UnityEngine;
 
 public class ObstacleController : MonoBehaviour
 {
-    public Obstacle[] obstacles;
-    public GameObject obstaclePrefab;
-    [Range(0.1f,20f)]public float obstacleSpeed = 3.0f;
-    [Range(0.1f, 4f)] public float obstacleFrequency = 1.0f;
+    [SerializeField] private GameObject obstaclePrefab;
+    [SerializeField] private Obstacle[] obstacles;
+    [Range(0.1f,20f)] 
+    [SerializeField] private float obstacleSpeed = 3.0f;
+    [Range(0.1f, 4f)] 
+    [SerializeField] private float obstacleFrequency = 1.0f;
     [Space]
-    [Range(5f, 40f)] public float obstacleSpawnX = 10f;
-    [Range(1f, 3f)] public float obstacleSpawnYMax = 2f;
-    [Range(-1f, 1f)] public float obstacleSpawnYOffset = 0.2f;
-    [Range(0.5f, 5f)] public float obstacleOpeningSizeY = 1f;
+    [Range(5f, 40f)] 
+    [SerializeField] private float obstacleSpawnX = 10f;
+    [Range(1f, 3f)] 
+    [SerializeField] private float obstacleSpawnYMax = 2f;
+    [Range(-1f, 1f)] 
+    [SerializeField] private float obstacleSpawnYOffset = 0.2f;
+    [Range(0.5f, 5f)] 
+    [SerializeField] private float obstacleOpeningSizeY = 1f;
 
     private int avaliableObstacleTypes = 0;
-    private int maxObstacles = 8;
+    private int maxObstacles = 5;
 
     private GameObject[] obstacleInstances;
     private int lastRespawnedObstacle = 0;
 
-    void Start()
+    private bool moveObstacles = true;
+    private Coroutine obstacleRespawner;
+    public void Bomb()
     {
-        obstacles.OrderBy(x => x.minScore);
-        foreach (Obstacle obs  in obstacles)
+        GameObject obs;
+        for (int i = 0; i < maxObstacles; i++)
+        {
+            obs = obstacleInstances[i];
+            if (obs)
+            {
+                GameObject childTop = obs.transform.GetChild(0).gameObject;
+                GameObject childBot = obs.transform.GetChild(1).gameObject;
+                GameObject childMid = obs.transform.GetChild(2).gameObject;
+                if (Camera.main.WorldToViewportPoint(obs.transform.position,Camera.MonoOrStereoscopicEye.Mono).x < 1)
+                {
+                    // Adding slide-away effect where top part of the obstacle slides upwards and bottom part slides downwards
+                    childTop.AddComponent<Rigidbody2D>();
+                    childBot.AddComponent<Rigidbody2D>();
+                    childTop.GetComponent<Rigidbody2D>().gravityScale = 0;
+                    childBot.GetComponent<Rigidbody2D>().gravityScale = 0;
+                    childTop.GetComponent<Rigidbody2D>().velocity = Vector3.up * childTop.transform.position.y;
+                    childBot.GetComponent<Rigidbody2D>().velocity = Vector3.up * childBot.transform.position.y;
+
+                    Destroy(childMid); //Destroying the collider awarding points from each set of obstacles
+
+                    // Disabling the colliders to avoid accidental collisions after bombing
+                    childTop.GetComponent<Collider2D>().enabled = false;
+                    childBot.GetComponent<Collider2D>().enabled = false;
+
+                    // destroying objects after they move away, code for spawning when null already exists
+                    Destroy(obs, 1.3f);
+                    obstacleInstances[i] = null;
+                }
+            }
+            
+        }
+    }
+
+    public void StopObstacles()
+    {
+        StopCoroutine(obstacleRespawner);
+        foreach (GameObject obs in obstacleInstances)
+        {
+            if (obs)
+            {
+                obs.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+            }
+        }
+    }   
+    public void StartObstacles()
+    {
+        StartCoroutine(ReSpawnObstacles());
+    }
+
+    private void Start()
+    {
+        obstacles.OrderBy(x => x.minScore); // sorting obstacle types by minimum score required for them to appear.
+
+        foreach (Obstacle obs in obstacles)
         {
             if (obs.minScore == 0 )
             {
@@ -33,38 +95,49 @@ public class ObstacleController : MonoBehaviour
         }
         obstacleInstances = new GameObject[15];
 
-        StartCoroutine("ReSpawnObstacles"); //this coroutine continually respawns last respawned obstacle as a new obstacle
+        obstacleRespawner = StartCoroutine(ReSpawnObstacles()); //this coroutine continually recreates oldest obstacles as new obstacles
     
     }
 
-    void SpawnObstacle(int obstacleNum)
+    private void SpawnObstacle(int obstacleNum)
     {
+        GameObject obs = obstacleInstances[obstacleNum];
         Vector2 spawnPos;
         float offset = obstacleSpawnYOffset;
+
         
+        // setting possition 
         spawnPos = new Vector2(obstacleSpawnX, (Random.Range(-obstacleSpawnYMax + offset, obstacleSpawnYMax + offset)));
         obstacleInstances[obstacleNum].transform.position = spawnPos;
 
 
-        GameObject obs = obstacleInstances[obstacleNum];
-        Obstacle obstacleToUse = obstacles[Random.Range(0, avaliableObstacleTypes)];
+        
 
-        obs.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = obstacleToUse.obstacleSpriteTop;
-        obs.transform.GetChild(0).GetComponent<SpriteRenderer>().color = obstacleToUse.obstacleColorTop;
-        obs.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = obstacleToUse.obstacleSpriteBot;
-        obs.transform.GetChild(1).GetComponent<SpriteRenderer>().color = obstacleToUse.obstacleColorBot;
+        // assigning sprites and colors to obstacles
+        // obs.transform.GetChild(0) returns top part of obstacle
+        // obs.transform.GetChild(1) returns bottom part of obstacle
+        Obstacle obstacleToUse = obstacles[Random.Range(0, avaliableObstacleTypes)];
+        SpriteRenderer sr;
+        sr = obs.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        sr.sprite = obstacleToUse.obstacleSpriteTop;
+        sr.color = obstacleToUse.obstacleColorTop;
+        
+        sr = obs.transform.GetChild(1).GetComponent<SpriteRenderer>();
+        sr.sprite = obstacleToUse.obstacleSpriteBot;
+        sr.color = obstacleToUse.obstacleColorBot;
 
     }
 
-    IEnumerator ReSpawnObstacles()
+    private IEnumerator ReSpawnObstacles()
     {
-        while (true)
+        while (moveObstacles)
         {
-            if(!obstacleInstances[lastRespawnedObstacle])
+            if(!obstacleInstances[lastRespawnedObstacle]) // checking if an obstacle is already instantiated
             {
-                Vector2 speed = new Vector2(-obstacleSpeed, 0);
                 GameObject obs = Instantiate(obstaclePrefab, transform);
-                
+
+                // assigning velocity to obstacle
+                Vector2 speed = Vector2.left * obstacleSpeed;
                 obs.GetComponent<Rigidbody2D>().velocity = speed;
                 obs.transform.GetChild(0).position += Vector3.up * obstacleOpeningSizeY / 2;
                 obs.transform.GetChild(1).position -= Vector3.up * obstacleOpeningSizeY / 2;
@@ -72,8 +145,10 @@ public class ObstacleController : MonoBehaviour
                 obstacleInstances[lastRespawnedObstacle] = obs;
 
             }
-            SpawnObstacle(lastRespawnedObstacle);
-            if (lastRespawnedObstacle >= maxObstacles-1)
+
+            SpawnObstacle(lastRespawnedObstacle); // Set default position to obstacle, and assign a random scriptable obstacle to it
+            
+            if (lastRespawnedObstacle >= maxObstacles-1) //looping through all obstacles in order, then going back to the first one
             {
                 lastRespawnedObstacle = 0;
             }
@@ -81,6 +156,7 @@ public class ObstacleController : MonoBehaviour
             {
                 lastRespawnedObstacle++;
             }   
+
             yield return new WaitForSeconds(obstacleFrequency);
         }
         

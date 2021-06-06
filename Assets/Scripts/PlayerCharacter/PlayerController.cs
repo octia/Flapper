@@ -4,30 +4,63 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject gameManager;
+    [SerializeField] private GameObject gameManagerGO;
     [Space]
-    [Range(0, 5)] public float gravityRate = 1f;
-    [Range(0, 3)] public float jumpPower = 1f;
-    [Range(0, 3)] public float maxSpeed = 1f;
+    [Range(0, 5)]
+    [SerializeField] private float gravityRate = 1f;
+    [Range(0, 3)]
+    [SerializeField] private float jumpPower = 1f;
+    [Range(0, 3)]
+    [SerializeField] private float maxSpeed = 1f;
     [Space]
-    [Range(0, 1)] public float DoubletapSpeed = 0.1f; //Time window in which second tap is turned from a jump to a bomb.
+    [Range(0, 1)]
+    [SerializeField] private float DoubletapSpeed = 0.1f; //Time window in which second tap is turned from a jump to a bomb.
 
 
     private float lastGravity = 0.0f;
     private float velocityMod = 10f;
     private bool isAlive = true;
     private bool canJump = true;
+    private bool isTouched = false;
+    private bool readyToBomb = false;
 
     private Rigidbody2D rb;
     private GamestateManager gameState;
 
-    void Start()
+
+    public void Jump()
     {
-        rb = gameObject.GetComponent<Rigidbody2D>();
-        gameState = gameManager.GetComponent<GamestateManager>();
+        if (readyToBomb)
+        {
+            gameState.UseBomb();
+        }
+        else
+        {
+            if (canJump && isAlive)
+            {
+                StartCoroutine(JumpCoroutine());
+                StartCoroutine(PrepareBomb());
+            }
+        }
+        
     }
 
-    void Update()
+    public void Resurrect()
+    {
+        canJump = true;
+        Jump();
+        isAlive = true;
+
+    }
+
+    private void Start()
+    {
+        rb = gameObject.GetComponent<Rigidbody2D>();
+        gameState = gameManagerGO.GetComponent<GamestateManager>();
+        Jump();
+    }
+
+    private void Update()
     {
         // If gravityRate is changed in the inspector, update gravity in Rigidbody.
         if (gravityRate != lastGravity)
@@ -35,53 +68,78 @@ public class PlayerController : MonoBehaviour
             SetGravity();
         }
 
-        
+        if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount > 0 && !isTouched))
+        {
+            if (canJump)
+            {
+                Jump();
+            }
+            
+        }
+
+        isTouched = Input.touchCount > 0 ? true : false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        switch (collision.transform.tag)
+        if (isAlive)
         {
-            case "Wall":
-                if (rb.velocity.y > 0)
-                {
-                    rb.velocity = new Vector2(0, 0);
-                    canJump = false;
-                }
-                break;
-            case "Death":
-                transform.position = new Vector2(-5, 0);
-                rb.velocity = Vector2.zero;
+            switch (collision.transform.tag)
+            {
+                case "Death":
+                    Die();
+                    break;
+                case "Reward":
+                    gameState.AddPoint();
+                    break;
+                default:
+                    break;
+            }
 
-                break;
-            case "Reward":
-                gameState.AddPoint();
-                break;
-            default:
-                break;
         }
-        
+
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        // Due to a bug, this check has to be in OnTriggerStay instead of OnTriggerEnter
+        if (collision.transform.tag == "Wall")
+        {
+            if (rb.velocity.y > 0) // Passing through the top of the screen is blocked.
+            {
+                rb.velocity = Vector2.zero;
+                canJump = false;
+            }
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.tag == "Wall")
-        {
-            canJump = true;
-        }
+        canJump = true;
     }
 
-    public void Jump()
+    private IEnumerator JumpCoroutine() // Due to a bug, jumping has to be applied after a fixedUpdate instead of immediately on press.
     {
-        if (canJump)
-        {
-            rb.velocity = new Vector2(0, jumpPower * velocityMod);
-        }
+        yield return new WaitForFixedUpdate();
+        rb.velocity = Vector2.up * jumpPower * velocityMod;
     }
 
+    private IEnumerator PrepareBomb()
+    {
+        readyToBomb = true;
+        yield return new WaitForSeconds(DoubletapSpeed);
+        readyToBomb = false;
+    }
 
+    private void Die()
+    {
+        canJump = true;
+        Jump();
+        isAlive = false;
+        gameState.Die();
+    }
 
-    void SetGravity()
+    private void SetGravity()
     {
         rb.gravityScale = gravityRate;
         lastGravity = gravityRate;
