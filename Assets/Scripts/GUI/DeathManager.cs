@@ -4,21 +4,23 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
+[DisallowMultipleComponent]
 public class DeathManager : MonoBehaviour
 {
+    [Header("GameObjects: ")]
     [SerializeField] private GameObject gameStateManagerGO;
-    [SerializeField] private GameObject scoreGO;
+    [SerializeField] private GameObject deathScoreGO;
     [SerializeField] private GameObject topScoreGO;
 
     private GamestateManager gameManager;
     private TMP_Text score;
     private TMP_Text[] topScores;
 
-    // Start is called before the first frame update
+
     private void Awake()
     {
         gameManager = gameStateManagerGO.GetComponent<GamestateManager>();
-        score = scoreGO.GetComponent<TMP_Text>();
+        score = deathScoreGO.GetComponent<TMP_Text>();
     }
 
     public void SetCurrentScore(int scoreCount)
@@ -26,19 +28,14 @@ public class DeathManager : MonoBehaviour
         score.text = scoreCount.ToString();
     }
 
-    public void Resurrect()
-    {
-
-    }
-
     public void RestartGame()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void GoToMenu()
     {
-
+        SceneManager.LoadScene(0);
     }
 
 

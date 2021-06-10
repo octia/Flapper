@@ -823,7 +823,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.87
+  m_LinearDrag: 1
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -845,9 +845,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManagerGO: {fileID: 1287987528}
   gravityRate: 2.03
-  jumpPower: 1.04
-  maxSpeed: 1
-  DoubletapSpeed: 0.34
+  dragRate: 1
+  jumpPower: 0.76
+  jumpBoostMaxTime: 0.63
+  jumpBoostMaxPower: 1.61
+  doubleTapSpeed: 0.173
 --- !u!1 &681635821
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,7 +1569,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1095881104}
   m_Layer: 5
-  m_Name: TopScoreHolder
+  m_Name: TopScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1646,9 +1648,9 @@ MonoBehaviour:
   obstacles:
   - {fileID: 11400000, guid: 00de918cd52200249b6f74aa171409d2, type: 2}
   - {fileID: 11400000, guid: 03f374de2c2dc3642ab9099b945f83f3, type: 2}
-  obstacleSpeed: 6.3
-  obstacleFrequency: 1.68
-  obstacleSpawnX: 32.7
+  obstacleSpeed: 7.4
+  obstacleFrequency: 1
+  obstacleSpawnX: 13
   obstacleSpawnYMax: 2
   obstacleSpawnYOffset: 0.3
   obstacleOpeningSizeY: 2.78
@@ -2358,7 +2360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateManagerGO: {fileID: 1287987528}
-  scoreGO: {fileID: 1194277996}
+  deathScoreGO: {fileID: 1194277996}
   topScoreGO: {fileID: 1095881103}
 --- !u!1 &1400490519
 GameObject:
