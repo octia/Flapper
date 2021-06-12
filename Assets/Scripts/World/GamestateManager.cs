@@ -11,15 +11,16 @@ public class GamestateManager : MonoBehaviour
     [SerializeField] private GameObject playerGO;
     [SerializeField] private GameObject obstacleGO;
     [SerializeField] private GameObject deathGO;
-    
+    [SerializeField] private GameObject backgroudGO;
+
     [Header("Counters")]
     [SerializeField] private int scoreCount = 0;
     [SerializeField] private int bombCount = 0;
 
     [Header("Bomb Parameters")]
-    [Range(1, 10)] 
+    [Range(0, 30)] 
     [SerializeField] private int bombAwardFrequency = 10;
-    [Range(1, 10)] 
+    [Range(0, 10)] 
     [SerializeField] private int bombCountMax = 3;
 
     private string scoreText = "";
@@ -30,6 +31,9 @@ public class GamestateManager : MonoBehaviour
     private ObstacleController obstacles;
     private PlayerController player;
     private DeathManager deathManager;
+
+    private Color currColor = Color.white;
+    private Color targetColor = Color.white;
     
     // Start is called before the first frame update
     private void Start()
@@ -67,9 +71,23 @@ public class GamestateManager : MonoBehaviour
         obstacles.StartObstacles();
         obstacles.Bomb();
     }
-    
+
     public void AddPoint(int amount = 1)
     {
+
+        if (Random.Range(0f, 10f) > 8f)
+        {
+            targetColor = Random.ColorHSV(0.8f, 1, 0.8f, 1, 0.8f, 1, 1f, 1f);
+        }
+
+        currColor = currColor + (targetColor - currColor) / 8;
+        for (int i = 0; i < backgroudGO.transform.childCount; i++)
+        {
+            backgroudGO.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().color = currColor;
+        }
+
+
+
         if (bombCount <= bombCountMax)
         {
 
@@ -88,7 +106,7 @@ public class GamestateManager : MonoBehaviour
             /// It shouldn't matter for current scoring system.
             /// But if, for exaple, 10 points were added per FixedUpdate, it could affect preformance.
             /// The code below relies on the fact that casting from floats to ints always returns a number rounded down.
-            if (((int)(((float)(scoreCount + amount)) / bombAwardFrequency)) != ((int)((float)scoreCount /bombAwardFrequency)))
+            if (((int)(((float)(scoreCount + amount)) / bombAwardFrequency)) != ((int)((float)scoreCount / bombAwardFrequency)))
             {
                 bombCount += (int)((float)(scoreCount + amount) / bombAwardFrequency) - (int)((float)scoreCount / bombAwardFrequency);
                 if (bombCount > bombCountMax)

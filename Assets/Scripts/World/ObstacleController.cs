@@ -37,7 +37,6 @@ public class ObstacleController : MonoBehaviour
     private GameObject[] obsInstances;
     private int lastRespawnedObstacle = 0;
 
-    private bool moveObstacles = true;
     private Coroutine obsRespawner;
     
     public void Bomb()
