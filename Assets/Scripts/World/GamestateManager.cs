@@ -75,12 +75,12 @@ public class GamestateManager : MonoBehaviour
     public void AddPoint(int amount = 1)
     {
 
-        if (Random.Range(0f, 10f) > 8f)
+        if (Random.Range(0f, 10f) > 7f)
         {
-            targetColor = Random.ColorHSV(0.8f, 1, 0.8f, 1, 0.8f, 1, 1f, 1f);
+            targetColor = Random.ColorHSV(0f, 1, 0.8f, 1, 0.8f, 1, 1f, 1f);
         }
 
-        currColor = currColor + (targetColor - currColor) / 8;
+        currColor = currColor + (targetColor - currColor) / 9;
         for (int i = 0; i < backgroudGO.transform.childCount; i++)
         {
             backgroudGO.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().color = currColor;
