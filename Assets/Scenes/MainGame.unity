@@ -745,7 +745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToScroll: {fileID: 3038724371238350171, guid: 81c602fa2181b524f8a9f1d9ce806e12, type: 3}
-  scrollingSpeed: 7
+  scrollingSpeed: 10.3
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

@@ -47,7 +47,8 @@ public class ObstacleController : MonoBehaviour
             obs = obsInstances[i];
             if (obs)
             {
-                if (Camera.main.WorldToViewportPoint(obs.transform.position,Camera.MonoOrStereoscopicEye.Mono).x < 1) // checking if obs is visible
+                Vector2 vpPos = Camera.main.WorldToViewportPoint(obs.transform.position, Camera.MonoOrStereoscopicEye.Mono);
+                if (vpPos.x < 1 && vpPos.x > -0.3) // checking if obs is visible
                 {
                     GameObject child;
                     for (int childID = 0; childID < obs.transform.childCount; childID++)

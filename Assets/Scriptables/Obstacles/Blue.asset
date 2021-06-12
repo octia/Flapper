@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleSpriteTop: {fileID: 21300000, guid: c3d0b9d62f6822542b5c896420076788, type: 3}
   obstacleSpriteBot: {fileID: 21300000, guid: 26b2806c728f7cb4391181d6eaafe0c9, type: 3}
-  obstacleColorTop: {r: 0, g: 0.24647593, b: 1, a: 1}
-  obstacleColorBot: {r: 0.035300255, g: 0, b: 1, a: 1}
+  obstacleColorTop: {r: 0, g: 0, b: 1, a: 1}
+  obstacleColorBot: {r: 0, g: 0, b: 1, a: 1}
   minScore: 5
