@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e47655d0ebf674ba35e03c1c72a5f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 61bc49515a068ef4cb108cd2cc742eaf, type: 3}
   m_Name: Blue
   m_EditorClassIdentifier: 
-  obstacleSpriteTop: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  obstacleSpriteBot: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  obstacleColorTop: {r: 0, g: 0, b: 1, a: 1}
-  obstacleColorBot: {r: 0, g: 0, b: 1, a: 1}
-  minScore: 0
+  obstacleSpriteTop: {fileID: 21300000, guid: c3d0b9d62f6822542b5c896420076788, type: 3}
+  obstacleSpriteBot: {fileID: 21300000, guid: 26b2806c728f7cb4391181d6eaafe0c9, type: 3}
+  obstacleColorTop: {r: 0, g: 0.24647593, b: 1, a: 1}
+  obstacleColorBot: {r: 0.035300255, g: 0, b: 1, a: 1}
+  minScore: 5

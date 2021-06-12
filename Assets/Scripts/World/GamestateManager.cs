@@ -50,6 +50,7 @@ public class GamestateManager : MonoBehaviour
         {
             obstacles.Bomb();
             bombCount--;
+            UpdateCounters();
         }
     }
 
@@ -99,6 +100,7 @@ public class GamestateManager : MonoBehaviour
 
         scoreCount += amount;
         UpdateCounters();
+        obstacles.NewScore(scoreCount); // todo: change to event?
     }
 
     private void UpdateCounters()
